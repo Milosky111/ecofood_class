@@ -1,49 +1,70 @@
-import './App.css'
-import { Header } from './components/Header.jsx';
+import './App.css';
+import { Header } from './components/header.jsx';
 import { ProductCard } from './components/ProductCard.jsx';
 import { Formulario } from './components/Formulario.jsx';
+import React, { useState } from 'react';
+import { Container, Button, ListGroup } from 'react-bootstrap';
+import AgregarProductoModal from './components/AgregarProductoModal';
 
-
-const products = [
-  { title: "Laguito", image: "https://picsum.photos/id/10/2500/1667", description: "Tiene mucha agua" },
-  { title: "Bosque", image: "https://picsum.photos/id/28/4928/3264", description: "Esta verdecito" },
-  { title: "Bosque", image: "https://picsum.photos/id/28/4928/3264", description: "Esta verdecito" }
+const productosIniciales = [
+  {
+    title: 'Cuida tus recursos.',
+    image: 'https://picsum.photos/id/674/367/267',
+    description: 'Guárdalos bien para que se conserven mejor.',
+  },
+  {
+    title: 'Revisa tus frutas',
+    image: 'https://picsum.photos/id/429/367/267',
+    description: 'Siempre se pueden salvar.',
+  },
+  {
+    title: 'Cocina con lo que tienes',
+    image: 'https://picsum.photos/id/292/367/267',
+    description: 'Usa tu imaginación.',
+  },
 ];
 
 function App() {
+  const [productos, setProductos] = useState(productosIniciales);
+  const [showModal, setShowModal] = useState(false);
+
+  const agregarProducto = (producto) => {
+    const nuevo = {
+      id: Date.now(),
+      title: producto.title,
+      image: producto.image,
+      description: producto.description,
+    };
+    setProductos([...productos, nuevo]);
+  };
+
   return (
     <>
-      <div>
-        <Header />  
-      </div>
-      <div>
-        <ProductCard 
-          title="Laguito" 
-          image="https://picsum.photos/id/10/2500/1667" 
-          description="Tiene mucha agua" 
-        />
-        <ProductCard 
-          title="Bosque" 
-          image="https://picsum.photos/id/28/4928/3264" 
-          description="Esta verdecito" 
-        />
-      </div>
-      <div>
-        {products.map((product, index) => (
-          <ProductCard 
-            key={index} 
-            title={product.title} 
-            image={product.image} 
-            description={product.description} 
-          />
+      <Header />
+      <div className="d-flex flex-wrap gap-3 justify-content-center p-3">
+        {productos.map((prod, idx) => (
+          <ProductCard key={idx} {...prod} />
         ))}
-
       </div>
       <div>
         <Formulario />
-
       </div>
+
+      <Container className="py-4">
+        <h1 className="mb-4">Productos</h1>
+        <Button variant="success" onClick={() => setShowModal(true)}>
+          + Agregar Producto
+        </Button>
+
+  
+        <AgregarProductoModal
+          show={showModal}
+          setShow={setShowModal}
+          agregarProducto={agregarProducto}
+        />
+      </Container>
     </>
-  )
+  );
 }
-export default App
+
+export default App;
